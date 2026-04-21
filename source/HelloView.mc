@@ -96,12 +96,22 @@ class HelloView extends WatchUi.WatchFace {
             xc + (xMin).toNumber(),
             yc + (yMin).toNumber()
         );
+        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
+        dc.setPenWidth(4);
+        dc.drawLine(
+            xc + (2*min_offset*xMin).toNumber(),
+            yc + (2*min_offset*yMin).toNumber(),
+            xc + (xMin).toNumber(),
+            yc + (yMin).toNumber()
+        );
 
         // draw battery indicator
         {
-            var aBat = (decMin+1.0/6.0) * 2.0 * Math.PI;
+            var aBat = (decMin-1.0/6.0) * 2.0 * Math.PI;
             var xBat = xc * Math.sin(aBat);
             var yBat = -xc * Math.cos(aBat);
+
+            dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
             dc.drawText(
                 xc + (0.7*xBat).toNumber(),
                 yc + (0.7*yBat).toNumber(),
