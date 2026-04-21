@@ -4,6 +4,8 @@ import Toybox.System;
 import Toybox.WatchUi;
 
 using Toybox.Math;
+using Toybox.Time;
+using Toybox.SensorHistory;
 
 class HelloView extends WatchUi.WatchFace {
 
@@ -22,9 +24,20 @@ class HelloView extends WatchUi.WatchFace {
     function onShow() as Void {
     }
 
+    function getHeartRate() as String {
+        var hr_history = SensorHistory.getHeartRateHistory(null);
+        var hr = hr_history.next();
+        if (hr == null) {
+            return "--";
+        }
+        return hr.data.format("%d");
+    }
+
     // Update the view
     function onUpdate(dc as Dc) as Void {
+        var day = Time.Gregorian.info(Time.now(), Time.FORMAT_SHORT).day.format("%d");
         var batPercent = System.getSystemStats().battery / 100.0;
+        var hb = getHeartRate();
 
         // Get and show the current time
         var clockTime = System.getClockTime();
@@ -48,6 +61,9 @@ class HelloView extends WatchUi.WatchFace {
         var yMin = -l * Math.cos(aMin);
 
         dc.setPenWidth(penWidth);
+
+        // Ensure background color is black before clear()
+        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
 
         // draw 12h mark
@@ -90,6 +106,31 @@ class HelloView extends WatchUi.WatchFace {
             yc + (yMin/3 + yMin*2/3*batPercent).toNumber(),
             xc + (xMin).toNumber(),
             yc + (yMin).toNumber()
+        );
+
+        var aDay = (decMin+1.0/6.0) * 2.0 * Math.PI;
+        var xDay = l * Math.sin(aDay);
+        var yDay = -l * Math.cos(aDay);
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(
+            xc + 0.8*xDay,
+            yc + 0.8*yDay,
+            Graphics.FONT_SMALL,
+            day,
+            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
+        );
+
+
+        var aHB = (decMin-1.0/6.0) * 2.0 * Math.PI;
+        var xHB = l * Math.sin(aHB);
+        var yHB = -l * Math.cos(aHB);
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(
+            xc + 0.8*xHB,
+            yc + 0.8*yHB,
+            Graphics.FONT_SMALL,
+            hb,
+            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
         );
     }
 
