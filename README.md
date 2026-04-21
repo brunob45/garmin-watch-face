@@ -1,6 +1,6 @@
 # Garmin Watch Face
-Custom watch face for my Garmin Venu Sq 2.
+Custom watch face for my Garmin Venu Sq 2. Loosely inspired from [Ressence Watches](https://ressencewatches.com/).
 
-# References
+# Garmin References
 - https://developer.garmin.com/connect-iq/overview/
 - https://developer.garmin.com/connect-iq/api-docs/
