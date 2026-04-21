@@ -24,6 +24,9 @@ class HelloView extends WatchUi.WatchFace {
 
     // Update the view
     function onUpdate(dc as Dc) as Void {
+        var stats = System.getSystemStats();
+        var batString = stats.battery.format("%3d");
+
         // Get and show the current time
         var clockTime = System.getClockTime();
         var decMin = clockTime.min / 60.0 + clockTime.sec / 3600.0;
@@ -71,14 +74,13 @@ class HelloView extends WatchUi.WatchFace {
             xc - 0.4*xMin + 0.5*xHour,
             yc - 0.4*yMin + 0.5*yHour
         );
-        
-        var stats = System.getSystemStats();
-        var batString = stats.battery.format("%02d");
+
         dc.drawText(
-            0, 0,
+            dc.getWidth()-1,
+            0,
             Graphics.FONT_SMALL,
             batString,
-            Graphics.TEXT_JUSTIFY_LEFT
+            Graphics.TEXT_JUSTIFY_RIGHT
         );
     }
 
