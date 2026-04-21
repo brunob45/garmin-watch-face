@@ -26,7 +26,7 @@ class HelloView extends WatchUi.WatchFace {
     function onUpdate(dc as Dc) as Void {
         // Get and show the current time
         var clockTime = System.getClockTime();
-        var decMin = clockTime.min / 60.0;
+        var decMin = clockTime.min / 60.0 + clockTime.sec / 3600.0;
         var decHour = (clockTime.hour + decMin) / 12.0;
 
         // Get center coordinate
@@ -49,27 +49,36 @@ class HelloView extends WatchUi.WatchFace {
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
         dc.clear();
 
-        // draw hour hand
-        dc.drawLine(
-            xc + xHour/3,
-            yc + yHour/3,
-            xc + xHour,
-            yc + yHour
-        );
-
-        // draw hour circle
-        dc.drawCircle(
-            xc - xHour/2,
-            yc - yHour/2,
-            l/2
-        );
-
         // draw minute hand
         dc.drawLine(
-            xc - xHour/2,
-            yc - yHour/2,
-            xc + xMin/2.2 - xHour/2,
-            yc + yMin/2.2 - yHour/2
+            xc + xMin/3,
+            yc + yMin/3,
+            xc + xMin,
+            yc + yMin
+        );
+
+        // draw minute circle
+        dc.drawCircle(
+            xc - 0.4*xMin,
+            yc - 0.4*yMin,
+            0.6*l
+        );
+
+        // draw hour hand
+        dc.drawLine(
+            xc - 0.4*xMin,
+            yc - 0.4*yMin,
+            xc - 0.4*xMin + 0.5*xHour,
+            yc - 0.4*yMin + 0.5*yHour
+        );
+        
+        var stats = System.getSystemStats();
+        var batString = stats.battery.format("%02d");
+        dc.drawText(
+            0, 0,
+            Graphics.FONT_SMALL,
+            batString,
+            Graphics.TEXT_JUSTIFY_LEFT
         );
     }
 
