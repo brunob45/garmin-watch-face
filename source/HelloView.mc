@@ -22,11 +22,11 @@ class HelloView extends WatchUi.WatchFace {
     function onShow() as Void {
     }
 
-    function drawHand(dc as Dc, time as Float, r as Float) as Void {
+    function drawHand(dc as Dc, time as Float, r1 as Float, r2 as Float) as Void {
         var angle = time * 2.0 * Math.PI;
-        var x = r * Math.sin(angle);
-        var y = r * Math.cos(angle);
-        dc.drawLine(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2 + x, dc.getHeight()/2 - y);
+        var x = 0.5 * dc.getWidth() * Math.sin(angle);
+        var y = -0.5 * dc.getWidth() * Math.cos(angle);
+        dc.drawLine(dc.getWidth()/2 + r1*x, dc.getHeight()/2 + r1*y, dc.getWidth()/2 + r2*x, dc.getHeight()/2 + r2*y);
     }
 
     // Update the view
@@ -40,8 +40,8 @@ class HelloView extends WatchUi.WatchFace {
         var decMin = clockTime.min / 60.0;
         var decHour = (clockTime.hour + decMin) / 12.0;
 
-        drawHand(dc, decMin, dc.getWidth()/2.0);
-        drawHand(dc, decHour, dc.getWidth()/3.0);
+        drawHand(dc, decMin, 0.0, 1.0);
+        drawHand(dc, decHour, 0.0, 0.75);
     }
 
     // Called when this View is removed from the screen. Save the
