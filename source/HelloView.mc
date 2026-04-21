@@ -50,44 +50,48 @@ class HelloView extends WatchUi.WatchFace {
         dc.setPenWidth(penWidth);
         dc.clear();
 
+        var circle_offset = 0.45;
+
         // draw 12h mark
         dc.setColor(0x08a093, Graphics.COLOR_BLACK);
         dc.fillCircle(
-            xc - (0.4*xMin).toNumber(),
-            yc - (0.4*yMin).toNumber() - 0.6*l + 10,
+            xc - (circle_offset*xMin).toNumber(),
+            yc - (circle_offset*yMin).toNumber() - (1.0-circle_offset)*l + 10,
             4
         );
 
         // draw minute circle
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
         dc.drawCircle(
-            xc - (0.4*xMin).toNumber(),
-            yc - (0.4*yMin).toNumber(),
-            0.6*l
+            xc - (circle_offset*xMin).toNumber(),
+            yc - (circle_offset*yMin).toNumber(),
+            (1.0-circle_offset) * l
         );
 
         // draw hour hand
         dc.drawLine(
-            xc - (0.4*xMin).toNumber(),
-            yc - (0.4*yMin).toNumber(),
-            xc - (0.4*xMin).toNumber() + (0.5*xHour).toNumber(),
-            yc - (0.4*yMin).toNumber() + (0.5*yHour).toNumber()
+            xc - (circle_offset*xMin).toNumber(),
+            yc - (circle_offset*yMin).toNumber(),
+            xc - (circle_offset*xMin).toNumber() + (0.45*xHour).toNumber(),
+            yc - (circle_offset*yMin).toNumber() + (0.45*yHour).toNumber()
         );
 
         // draw minute hand
+        var min_offset = 0.25;
         dc.setPenWidth(8);
         dc.drawLine(
-            xc + (xMin/3).toNumber(),
-            yc + (yMin/3).toNumber(),
+            xc + (min_offset*xMin).toNumber(),
+            yc + (min_offset*yMin).toNumber(),
             xc + (xMin).toNumber(),
             yc + (yMin).toNumber()
         );
 
+        // draw battery indicator in minute hand
         dc.setPenWidth(4);
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.drawLine(
-            xc + (xMin/3 + xMin*2/3*batPercent).toNumber(),
-            yc + (yMin/3 + yMin*2/3*batPercent).toNumber(),
+            xc + (min_offset*xMin + (1.0-min_offset)*xMin*batPercent).toNumber(),
+            yc + (min_offset*yMin + (1.0-min_offset)*yMin*batPercent).toNumber(),
             xc + (xMin).toNumber(),
             yc + (yMin).toNumber()
         );
