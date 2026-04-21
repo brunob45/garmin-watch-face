@@ -47,9 +47,40 @@ class HelloView extends WatchUi.WatchFace {
         var decMin = clockTime.min / 60.0;
         var decHour = (clockTime.hour + decMin) / 12.0;
 
-        drawHand(dc, decMin, 0.0, 1.0);
-        drawHand(dc, decHour, 0.25, 0.75);
-        drawCirc(dc, decHour+0.5, 0.5, 0.25);
+        { // draw hour hand
+            var r1 = 0.25;
+            var r2 = 0.75;
+            var angle = decHour * 2.0 * Math.PI;
+            var x = 0.5 * dc.getWidth() * Math.sin(angle);
+            var y = -0.5 * dc.getWidth() * Math.cos(angle);
+            dc.drawLine(dc.getWidth()/2 + r1*x, dc.getHeight()/2 + r1*y, dc.getWidth()/2 + r2*x, dc.getHeight()/2 + r2*y);
+        }
+
+        { // draw hour circle
+            var r1 = 0.5;
+            var r2 = 0.25;
+            var angle = (decHour+0.5) * 2.0 * Math.PI;
+            var x = 0.5 * dc.getWidth() * Math.sin(angle);
+            var y = -0.5 * dc.getWidth() * Math.cos(angle);
+            dc.drawCircle(dc.getWidth()/2 + r1*x, dc.getHeight()/2 + r1*y, dc.getWidth() * r2);
+        }
+
+        { // draw minute hand
+            var angle_center = (decHour+0.5) * 2.0 * Math.PI;
+            var x_center = 0.25 * dc.getWidth() * Math.sin(angle_center);
+            var y_center = -0.25 * dc.getWidth() * Math.cos(angle_center);
+
+            var r1 = 0.0;
+            var r2 = 0.5;
+            var angle = decMin * 2.0 * Math.PI;
+            var x = 0.5 * dc.getWidth() * Math.sin(angle);
+            var y = -0.5 * dc.getWidth() * Math.cos(angle);
+            dc.drawLine(
+                dc.getWidth()/2 + r1*x + x_center,
+                dc.getHeight()/2 + r1*y + y_center,
+                dc.getWidth()/2 + r2*x + x_center,
+                dc.getHeight()/2 + r2*y + y_center);
+        }
     }
 
     // Called when this View is removed from the screen. Save the
