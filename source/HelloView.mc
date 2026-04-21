@@ -3,6 +3,8 @@ import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
 
+using Toybox.Math;
+
 class HelloView extends WatchUi.WatchFace {
 
     function initialize() {
@@ -20,16 +22,26 @@ class HelloView extends WatchUi.WatchFace {
     function onShow() as Void {
     }
 
+    function drawHand(dc as Dc, time as Float, r as Float) as Void {
+        var angle = time * 2.0 * Math.PI;
+        var x = r * Math.sin(angle);
+        var y = r * Math.cos(angle);
+        dc.drawLine(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2 + x, dc.getHeight()/2 - y);
+    }
+
     // Update the view
     function onUpdate(dc as Dc) as Void {
+        dc.setPenWidth(5);
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
+        dc.clear();
+
         // Get and show the current time
         var clockTime = System.getClockTime();
-        var timeString = Lang.format("$1$:$2$", [clockTime.hour, clockTime.min.format("%02d")]);
-        var view = View.findDrawableById("TimeLabel") as Text;
-        view.setText(timeString);
+        var decMin = clockTime.min / 60.0;
+        var decHour = (clockTime.hour + decMin) / 12.0;
 
-        // Call the parent onUpdate function to redraw the layout
-        View.onUpdate(dc);
+        drawHand(dc, decMin, dc.getWidth()/2.0);
+        drawHand(dc, decHour, dc.getWidth()/3.0);
     }
 
     // Called when this View is removed from the screen. Save the
