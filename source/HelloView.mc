@@ -54,11 +54,20 @@ class HelloView extends WatchUi.WatchFace {
 
         // draw 12h mark
         dc.setColor(0x08a093, Graphics.COLOR_BLACK);
-        dc.fillCircle(
-            xc - (circle_offset*xMin).toNumber(),
-            yc - (circle_offset*yMin).toNumber() - (1.0-circle_offset)*l + 10,
-            4
-        );
+        {
+            var r = (1.0-circle_offset)*l - 10;
+            for (var i = 0; i < 12; i++) {
+                var angle = i * Math.PI / 6;
+                var x = r * Math.sin(angle);
+                var y = -r * Math.cos(angle);
+                dc.fillCircle(
+                    xc - (circle_offset*xMin).toNumber() + x,
+                    yc - (circle_offset*yMin).toNumber() + y,
+                    4
+                );
+                dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_BLACK);
+            }
+        }
 
         // draw minute circle
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
