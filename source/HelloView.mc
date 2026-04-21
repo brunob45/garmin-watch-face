@@ -51,7 +51,7 @@ class HelloView extends WatchUi.WatchFace {
         dc.clear();
 
         // draw 12h mark
-        dc.setColor(0x00AAAA, Graphics.COLOR_BLACK);
+        dc.setColor(0x08a093, Graphics.COLOR_BLACK);
         dc.fillCircle(
             xc - (0.4*xMin).toNumber(),
             yc - (0.4*yMin).toNumber() - 0.6*l + 10,
