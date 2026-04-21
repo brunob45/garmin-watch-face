@@ -32,7 +32,7 @@ class HelloView extends WatchUi.WatchFace {
         var decHour = (clockTime.hour + decMin) / 12.0;
 
         // Get center coordinate
-        var penWidth = 6.0;
+        var penWidth = 6;
         var xc = dc.getWidth()/2;
         var yc = dc.getHeight()/2;
         var l = xc - penWidth/2;
@@ -48,10 +48,18 @@ class HelloView extends WatchUi.WatchFace {
         var yMin = -l * Math.cos(aMin);
 
         dc.setPenWidth(penWidth);
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
         dc.clear();
 
+        // draw 12h mark
+        dc.setColor(0x00AAAA, Graphics.COLOR_BLACK);
+        dc.fillCircle(
+            xc - (0.4*xMin).toNumber(),
+            yc - (0.4*yMin).toNumber() - 0.6*l + 10,
+            4
+        );
+
         // draw minute circle
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
         dc.drawCircle(
             xc - (0.4*xMin).toNumber(),
             yc - (0.4*yMin).toNumber(),
