@@ -29,48 +29,48 @@ class HelloView extends WatchUi.WatchFace {
         var decMin = clockTime.min / 60.0;
         var decHour = (clockTime.hour + decMin) / 12.0;
 
-        var aHour = decHour * 2.0 * Math.PI;
-        var xHour = 0.5 * dc.getWidth() * Math.sin(aHour);
-        var yHour = -0.5 * dc.getWidth() * Math.cos(aHour);
-        
-        var aMin = decMin * 2.0 * Math.PI;
-        var xMin = 0.5 * dc.getWidth() * Math.sin(aMin);
-        var yMin = -0.5 * dc.getWidth() * Math.cos(aMin);
+        // Get center coordinate
+        var penWidth = 6.0;
+        var xc = 0.5 * dc.getWidth();
+        var yc = 0.5 * dc.getHeight();
+        var l = xc - penWidth/2;
 
-        dc.setPenWidth(5);
+        // Get hour offset
+        var aHour = decHour * 2.0 * Math.PI;
+        var xHour = l * Math.sin(aHour);
+        var yHour = -l * Math.cos(aHour);
+        
+        // Get minute offset
+        var aMin = decMin * 2.0 * Math.PI;
+        var xMin = l * Math.sin(aMin);
+        var yMin = -l * Math.cos(aMin);
+
+        dc.setPenWidth(penWidth);
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
         dc.clear();
 
-        { // draw hour hand
-            var r1 = 0.25;
-            var r2 = 0.75;
-            var x = xHour;
-            var y = yHour;
-            dc.drawLine(dc.getWidth()/2 + r1*x, dc.getHeight()/2 + r1*y, dc.getWidth()/2 + r2*x, dc.getHeight()/2 + r2*y);
-        }
+        // draw hour hand
+        dc.drawLine(
+            xc + xHour/3,
+            yc + yHour/3,
+            xc + xHour,
+            yc + yHour
+        );
 
-        { // draw hour circle
-            var r1 = 0.5;
-            var r2 = 0.25;
-            var x = -xHour;
-            var y = -yHour;
-            dc.drawCircle(dc.getWidth()/2 + r1*x, dc.getHeight()/2 + r1*y, dc.getWidth() * r2);
-        }
+        // draw hour circle
+        dc.drawCircle(
+            xc - xHour/2,
+            yc - yHour/2,
+            l/2
+        );
 
-        { // draw minute hand
-            var x_center = -0.5 * xHour;
-            var y_center = -0.5 * yHour;
-
-            var r1 = 0.0;
-            var r2 = 0.5;
-            var x = xMin;
-            var y = yMin;
-            dc.drawLine(
-                dc.getWidth()/2 + r1*x + x_center,
-                dc.getHeight()/2 + r1*y + y_center,
-                dc.getWidth()/2 + r2*x + x_center,
-                dc.getHeight()/2 + r2*y + y_center);
-        }
+        // draw minute hand
+        dc.drawLine(
+            xc - xHour/2,
+            yc - yHour/2,
+            xc + xMin/2.2 - xHour/2,
+            yc + yMin/2.2 - yHour/2
+        );
     }
 
     // Called when this View is removed from the screen. Save the
