@@ -29,6 +29,13 @@ class HelloView extends WatchUi.WatchFace {
         dc.drawLine(dc.getWidth()/2 + r1*x, dc.getHeight()/2 + r1*y, dc.getWidth()/2 + r2*x, dc.getHeight()/2 + r2*y);
     }
 
+    function drawCirc(dc as Dc, time as Float, r1 as Float, r2 as Float) as Void {
+        var angle = time * 2.0 * Math.PI;
+        var x = 0.5 * dc.getWidth() * Math.sin(angle);
+        var y = -0.5 * dc.getWidth() * Math.cos(angle);
+        dc.drawCircle(dc.getWidth()/2 + r1*x, dc.getHeight()/2 + r1*y, dc.getWidth() * r2);
+    }
+
     // Update the view
     function onUpdate(dc as Dc) as Void {
         dc.setPenWidth(5);
@@ -41,7 +48,8 @@ class HelloView extends WatchUi.WatchFace {
         var decHour = (clockTime.hour + decMin) / 12.0;
 
         drawHand(dc, decMin, 0.0, 1.0);
-        drawHand(dc, decHour, 0.0, 0.75);
+        drawHand(dc, decHour, 0.25, 0.75);
+        drawCirc(dc, decHour+0.5, 0.5, 0.25);
     }
 
     // Called when this View is removed from the screen. Save the
