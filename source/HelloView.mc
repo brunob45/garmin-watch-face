@@ -24,7 +24,7 @@ class HelloView extends WatchUi.WatchFace {
 
     // Update the view
     function onUpdate(dc as Dc) as Void {
-        var batPercent = System.getSystemStats().battery / 100.0;
+        var batPercent = System.getSystemStats().battery;
 
         // Get and show the current time
         var clockTime = System.getClockTime();
@@ -48,6 +48,8 @@ class HelloView extends WatchUi.WatchFace {
         var yMin = -l * Math.cos(aMin);
 
         dc.setPenWidth(penWidth);
+
+        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
 
         var circle_offset = 0.45;
@@ -95,15 +97,34 @@ class HelloView extends WatchUi.WatchFace {
             yc + (yMin).toNumber()
         );
 
-        // draw battery indicator in minute hand
-        dc.setPenWidth(4);
-        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
-        dc.drawLine(
-            xc + (min_offset*xMin + (1.0-min_offset)*xMin*batPercent).toNumber(),
-            yc + (min_offset*yMin + (1.0-min_offset)*yMin*batPercent).toNumber(),
-            xc + (xMin).toNumber(),
-            yc + (yMin).toNumber()
-        );
+        // draw battery indicator
+        {
+            var aBat = (decMin+1.0/6.0) * 2.0 * Math.PI;
+            var xBat = xc * Math.sin(aBat);
+            var yBat = -xc * Math.cos(aBat);
+            dc.drawText(
+                xc + (0.7*xBat).toNumber(),
+                yc + (0.7*yBat).toNumber(),
+                Graphics.FONT_TINY,
+                batPercent.format("%d"),
+                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
+            );
+            dc.setPenWidth(1);
+            dc.drawCircle(
+                xc + (0.7*xBat).toNumber(),
+                yc + (0.7*yBat).toNumber(),
+                0.2*xc + 5
+            );
+            dc.setPenWidth(4);
+            dc.drawArc(
+                xc + (0.7*xBat).toNumber(),
+                yc + (0.7*yBat).toNumber(),
+                0.2*xc,
+                Graphics.ARC_CLOCKWISE,
+                90,
+                3.6 * (125-batPercent)
+            );
+        }
     }
 
     // Called when this View is removed from the screen. Save the
