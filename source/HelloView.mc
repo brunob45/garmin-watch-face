@@ -24,8 +24,7 @@ class HelloView extends WatchUi.WatchFace {
 
     // Update the view
     function onUpdate(dc as Dc) as Void {
-        var stats = System.getSystemStats();
-        var batString = stats.battery.format("%3d");
+        var batPercent = System.getSystemStats().battery / 100.0;
 
         // Get and show the current time
         var clockTime = System.getClockTime();
@@ -34,8 +33,8 @@ class HelloView extends WatchUi.WatchFace {
 
         // Get center coordinate
         var penWidth = 6.0;
-        var xc = 0.5 * dc.getWidth();
-        var yc = 0.5 * dc.getHeight();
+        var xc = dc.getWidth()/2;
+        var yc = dc.getHeight()/2;
         var l = xc - penWidth/2;
 
         // Get hour offset
@@ -52,35 +51,37 @@ class HelloView extends WatchUi.WatchFace {
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
         dc.clear();
 
-        // draw minute hand
-        dc.drawLine(
-            xc + xMin/3,
-            yc + yMin/3,
-            xc + xMin,
-            yc + yMin
-        );
-
         // draw minute circle
         dc.drawCircle(
-            xc - 0.4*xMin,
-            yc - 0.4*yMin,
+            xc - (0.4*xMin).toNumber(),
+            yc - (0.4*yMin).toNumber(),
             0.6*l
         );
 
         // draw hour hand
         dc.drawLine(
-            xc - 0.4*xMin,
-            yc - 0.4*yMin,
-            xc - 0.4*xMin + 0.5*xHour,
-            yc - 0.4*yMin + 0.5*yHour
+            xc - (0.4*xMin).toNumber(),
+            yc - (0.4*yMin).toNumber(),
+            xc - (0.4*xMin).toNumber() + (0.5*xHour).toNumber(),
+            yc - (0.4*yMin).toNumber() + (0.5*yHour).toNumber()
         );
 
-        dc.drawText(
-            dc.getWidth()-1,
-            0,
-            Graphics.FONT_SMALL,
-            batString,
-            Graphics.TEXT_JUSTIFY_RIGHT
+        // draw minute hand
+        dc.setPenWidth(8);
+        dc.drawLine(
+            xc + (xMin/3).toNumber(),
+            yc + (yMin/3).toNumber(),
+            xc + (xMin).toNumber(),
+            yc + (yMin).toNumber()
+        );
+
+        dc.setPenWidth(4);
+        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
+        dc.drawLine(
+            xc + (xMin/3 + xMin*2/3*batPercent).toNumber(),
+            yc + (yMin/3 + yMin*2/3*batPercent).toNumber(),
+            xc + (xMin).toNumber(),
+            yc + (yMin).toNumber()
         );
     }
 
