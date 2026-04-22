@@ -113,7 +113,7 @@ class HelloView extends WatchUi.WatchFace {
             _t.translate(xc-circle_offset*xMin, yc-circle_offset*yMin);
             _t.rotate(aHour);
             _t.scale(0.6, 0.6);
-            _t.translate(-hand.getWidth()/2.0, -hand.getHeight().toFloat());
+            _t.translate(-hand.getWidth()/2.0, -hand.getHeight()+hand.getWidth()/2.0);
             drawBitmap(dc, hand, _t);
         }
 
