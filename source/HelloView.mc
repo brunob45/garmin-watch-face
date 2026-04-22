@@ -7,11 +7,11 @@ using Toybox.Math;
 
 class HelloView extends WatchUi.WatchFace {
 
-    private var _t as Graphics.AffineTransform;
+    private var _hand as WatchUi.BitmapResource;
 
     function initialize() {
         WatchFace.initialize();
-        _t = new Graphics.AffineTransform();
+        _hand = WatchUi.loadResource($.Rez.Drawables.MinuteHand);
     }
 
     // Load your resources here
@@ -99,27 +99,25 @@ class HelloView extends WatchUi.WatchFace {
         );
 
         {
-            var hand = WatchUi.loadResource($.Rez.Drawables.MinuteHand) as Graphics.BitmapType;
-
             // draw minute hand
-            _t.initialize();
-            _t.translate(xc.toFloat(), yc.toFloat());
-            _t.rotate(aMin);
-            _t.translate(-hand.getWidth()/2.0, -hand.getHeight().toFloat()-40);
-            drawBitmap(dc, hand, _t);
+            var t = new Graphics.AffineTransform();
+            t.translate(xc.toFloat(), yc.toFloat());
+            t.rotate(aMin);
+            t.translate(-_hand.getWidth()/2.0, -_hand.getHeight()-40.0);
+            drawBitmap(dc, _hand, t);
 
             // draw hour hand
-            _t.initialize();
-            _t.translate(xc-circle_offset*xMin, yc-circle_offset*yMin);
-            _t.rotate(aHour);
-            _t.scale(0.6, 0.6);
-            _t.translate(-hand.getWidth()/2.0, -hand.getHeight()+hand.getWidth()/2.0);
-            drawBitmap(dc, hand, _t);
+            t = new Graphics.AffineTransform();
+            t.translate(xc-circle_offset*xMin, yc-circle_offset*yMin);
+            t.rotate(aHour);
+            t.scale(0.6, 0.6);
+            t.translate(-_hand.getWidth()/2.0, -_hand.getHeight()+_hand.getWidth()/2.0);
+            drawBitmap(dc, _hand, t);
         }
 
         // draw battery indicator
         {
-            var aBat = (decMin-1.0/6.0) * 2.0 * Math.PI;
+            var aBat = (decMin-1.0/6.0) * 2.0 * Math.PI; // align with 10-hour mark
             var xBat = xc * Math.sin(aBat);
             var yBat = -xc * Math.cos(aBat);
 
