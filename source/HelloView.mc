@@ -57,7 +57,7 @@ class HelloView extends WatchUi.WatchFace {
         dc.drawText(
             x, y,
             Graphics.FONT_TINY,
-            batPercent.format("%d"),
+            batPercent.toNumber(),
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
         );
         dc.setPenWidth(1);
@@ -69,6 +69,37 @@ class HelloView extends WatchUi.WatchFace {
             90,
             3.6 * (125-batPercent)
         );
+    }
+
+    function drawDate(dc as Dc, a as Lang.Float) {
+        // draw date
+        var info = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
+        var xc = dc.getWidth()/2;
+        var yc = dc.getHeight()/2;
+
+        var x = xc + 0.7 * xc * Math.sin(a);
+        var y = yc - 0.7 * xc * Math.cos(a);
+        var r = 0.2 * xc;
+
+        var f = Graphics.FONT_XTINY;
+        var h = dc.getFontHeight(f);
+
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(
+            x, y-0.4*h,
+            f,
+            info.day_of_week,
+            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
+        );
+        dc.drawText(
+            x, y+0.4*h,
+            f,
+            info.day,
+            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
+        );
+        dc.setPenWidth(1);
+        dc.drawCircle(x, y, r+5);
+        dc.setPenWidth(4);
     }
 
     // Update the view
@@ -143,12 +174,16 @@ class HelloView extends WatchUi.WatchFace {
             drawBitmap(dc, _hand, t);
         }
 
+        drawDate(dc, aMin + 2*Math.PI*2/12); // align with 2-hour mark
         drawBattery(dc, aMin + 2*Math.PI*10/12); // align with 10-hour mark
 
         if (System.getDeviceSettings().notificationCount) {
             dc.setColor(COLOR_CUSTOM, Graphics.COLOR_BLACK);
-            dc.fillCircle(dc.getWidth()-10, 10, 4);
         }
+        else {
+            dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_BLACK);
+        }
+        dc.fillCircle(dc.getWidth()/2, 8, 8);
     }
 
     // Called when this View is removed from the screen. Save the
