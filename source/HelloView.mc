@@ -7,6 +7,8 @@ using Toybox.Math;
 
 class HelloView extends WatchUi.WatchFace {
 
+    const COLOR_CUSTOM = 0x08a093;
+
     private var _hand as WatchUi.BitmapResource;
 
     function initialize() {
@@ -99,7 +101,7 @@ class HelloView extends WatchUi.WatchFace {
         var circle_offset = 0.45;
 
         // draw 12h mark
-        dc.setColor(0x08a093, Graphics.COLOR_BLACK);
+        dc.setColor(COLOR_CUSTOM, Graphics.COLOR_BLACK);
         {
             var r = (1.0-circle_offset)*l - 10;
             for (var i = 0; i < 12; i++) {
@@ -142,6 +144,11 @@ class HelloView extends WatchUi.WatchFace {
         }
 
         drawBattery(dc, aMin + 2*Math.PI*10/12); // align with 10-hour mark
+
+        if (System.getDeviceSettings().notificationCount) {
+            dc.setColor(COLOR_CUSTOM, Graphics.COLOR_BLACK);
+            dc.fillCircle(dc.getWidth()-10, 10, 4);
+        }
     }
 
     // Called when this View is removed from the screen. Save the
