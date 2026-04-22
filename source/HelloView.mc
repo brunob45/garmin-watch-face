@@ -7,8 +7,11 @@ using Toybox.Math;
 
 class HelloView extends WatchUi.WatchFace {
 
+    private var _t as Graphics.AffineTransform;
+
     function initialize() {
         WatchFace.initialize();
+        _t = new Graphics.AffineTransform();
     }
 
     // Load your resources here
@@ -88,22 +91,27 @@ class HelloView extends WatchUi.WatchFace {
         );
 
         // draw minute hand
-        var min_offset = 0.25;
-        dc.setPenWidth(8);
-        dc.drawLine(
-            xc + (min_offset*xMin).toNumber(),
-            yc + (min_offset*yMin).toNumber(),
-            xc + (xMin).toNumber(),
-            yc + (yMin).toNumber()
-        );
-        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
-        dc.setPenWidth(4);
-        dc.drawLine(
-            xc + (2*min_offset*xMin).toNumber(),
-            yc + (2*min_offset*yMin).toNumber(),
-            xc + (xMin).toNumber(),
-            yc + (yMin).toNumber()
-        );
+        {
+            var hand = WatchUi.loadResource($.Rez.Drawables.MinuteHand) as Graphics.BitmapType;
+
+            _t.initialize();
+            _t.translate(xc.toFloat(), yc.toFloat());
+            _t.rotate(aMin);
+            _t.translate(-hand.getWidth()/2.0, -hand.getHeight().toFloat()-40);
+        
+            dc.drawBitmap2(
+                0,
+                0,
+                hand,
+                {
+                    :bitmapX=>0,
+                    :bitmapY=>0,
+                    :bitmapWidth=>hand.getWidth(),
+                    :bitmapHeight=>hand.getHeight(),
+                    :transform=>_t,
+                }
+            );
+        }
 
         // draw battery indicator
         {
