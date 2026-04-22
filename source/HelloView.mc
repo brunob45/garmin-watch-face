@@ -82,8 +82,8 @@ class HelloView extends WatchUi.WatchFace {
                 var x = r * Math.sin(angle);
                 var y = -r * Math.cos(angle);
                 dc.fillCircle(
-                    xc - (circle_offset*xMin).toNumber() + x,
-                    yc - (circle_offset*yMin).toNumber() + y,
+                    xc - circle_offset*xMin + x,
+                    yc - circle_offset*yMin + y,
                     4
                 );
                 dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_BLACK);
@@ -93,8 +93,8 @@ class HelloView extends WatchUi.WatchFace {
         // draw minute circle
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
         dc.drawCircle(
-            xc - (circle_offset*xMin).toNumber(),
-            yc - (circle_offset*yMin).toNumber(),
+            xc-circle_offset*xMin,
+            yc-circle_offset*yMin,
             (1.0-circle_offset) * l
         );
 
@@ -125,22 +125,22 @@ class HelloView extends WatchUi.WatchFace {
 
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
             dc.drawText(
-                xc + (0.7*xBat).toNumber(),
-                yc + (0.7*yBat).toNumber(),
+                xc + 0.7*xBat,
+                yc + 0.7*yBat,
                 Graphics.FONT_TINY,
                 batPercent.format("%d"),
                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
             );
             dc.setPenWidth(1);
             dc.drawCircle(
-                xc + (0.7*xBat).toNumber(),
-                yc + (0.7*yBat).toNumber(),
+                xc + 0.7*xBat,
+                yc + 0.7*yBat,
                 0.2*xc + 5
             );
             dc.setPenWidth(4);
             dc.drawArc(
-                xc + (0.7*xBat).toNumber(),
-                yc + (0.7*yBat).toNumber(),
+                xc + 0.7*xBat,
+                yc + 0.7*yBat,
                 0.2*xc,
                 Graphics.ARC_CLOCKWISE,
                 90,
