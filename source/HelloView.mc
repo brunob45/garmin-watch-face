@@ -25,6 +25,22 @@ class HelloView extends WatchUi.WatchFace {
     function onShow() as Void {
     }
 
+    // Wrapper for easy bitmap drawing
+    function drawBitmap(dc as Dc, bm as Graphics.BitmapType, t as Graphics.AffineTransform) as Void {
+        dc.drawBitmap2(
+            0,
+            0,
+            bm,
+            {
+                :bitmapX=>0,
+                :bitmapY=>0,
+                :bitmapWidth=>bm.getWidth(),
+                :bitmapHeight=>bm.getHeight(),
+                :transform=>t,
+            }
+        );
+    }
+
     // Update the view
     function onUpdate(dc as Dc) as Void {
         var batPercent = System.getSystemStats().battery;
@@ -40,13 +56,13 @@ class HelloView extends WatchUi.WatchFace {
         var yc = dc.getHeight()/2;
         var l = xc - penWidth/2;
 
-        // Get hour offset
+        // Get hour angle
         var aHour = decHour * 2.0 * Math.PI;
-        var xHour = l * Math.sin(aHour);
-        var yHour = -l * Math.cos(aHour);
         
-        // Get minute offset
+        // Get minute angle
         var aMin = decMin * 2.0 * Math.PI;
+
+        // Get minute offset
         var xMin = l * Math.sin(aMin);
         var yMin = -l * Math.cos(aMin);
 
@@ -82,35 +98,23 @@ class HelloView extends WatchUi.WatchFace {
             (1.0-circle_offset) * l
         );
 
-        // draw hour hand
-        dc.drawLine(
-            xc - (circle_offset*xMin).toNumber(),
-            yc - (circle_offset*yMin).toNumber(),
-            xc - (circle_offset*xMin).toNumber() + (0.45*xHour).toNumber(),
-            yc - (circle_offset*yMin).toNumber() + (0.45*yHour).toNumber()
-        );
-
-        // draw minute hand
         {
             var hand = WatchUi.loadResource($.Rez.Drawables.MinuteHand) as Graphics.BitmapType;
 
+            // draw minute hand
             _t.initialize();
             _t.translate(xc.toFloat(), yc.toFloat());
             _t.rotate(aMin);
             _t.translate(-hand.getWidth()/2.0, -hand.getHeight().toFloat()-40);
-        
-            dc.drawBitmap2(
-                0,
-                0,
-                hand,
-                {
-                    :bitmapX=>0,
-                    :bitmapY=>0,
-                    :bitmapWidth=>hand.getWidth(),
-                    :bitmapHeight=>hand.getHeight(),
-                    :transform=>_t,
-                }
-            );
+            drawBitmap(dc, hand, _t);
+
+            // draw hour hand
+            _t.initialize();
+            _t.translate(xc-circle_offset*xMin, yc-circle_offset*yMin);
+            _t.rotate(aHour);
+            _t.scale(0.6, 0.6);
+            _t.translate(-hand.getWidth()/2.0, -hand.getHeight().toFloat());
+            drawBitmap(dc, hand, _t);
         }
 
         // draw battery indicator
