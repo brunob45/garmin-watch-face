@@ -93,8 +93,6 @@ class HelloView extends WatchUi.WatchFace {
         var xMin = l * Math.sin(aMin);
         var yMin = -l * Math.cos(aMin);
 
-        dc.setPenWidth(penWidth);
-
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
 
@@ -118,6 +116,7 @@ class HelloView extends WatchUi.WatchFace {
         }
 
         // draw minute circle
+        dc.setPenWidth(penWidth);
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
         dc.drawCircle(
             xc-circle_offset*xMin,
@@ -130,7 +129,7 @@ class HelloView extends WatchUi.WatchFace {
             var t = new Graphics.AffineTransform();
             t.translate(xc.toFloat(), yc.toFloat());
             t.rotate(aMin);
-            t.translate(-_hand.getWidth()/2.0, -_hand.getHeight()-40.0);
+            t.translate(-_hand.getWidth()/2.0, -_hand.getHeight()-38.0);
             drawBitmap(dc, _hand, t);
 
             // draw hour hand
